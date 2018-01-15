@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  app:
+    build: ./
+    volumes:
+      - ./:/app
+    environment:
+      PATH: "/app/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
