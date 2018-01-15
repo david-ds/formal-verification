@@ -1,0 +1,20 @@
+{
+  "name": "ivf-project",
+  "version": "1.0.0",
+  "description": "Projet IVF",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run-script build && jest --verbose",
+    "clean": "bsb -clean-world",
+    "build": "bsb -make-world",
+    "watch": "bsb -make-world -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bs-platform": "^2.1.0"
+  },
+  "devDependencies": {
+    "bs-jest": "^0.3.2"
+  }
+}
