@@ -3,7 +3,7 @@
  *)
 
 type language = Skip    of string
-              | Assign  of string   * Aexp.arith_expr
+              | Assign  of string   * string          * Aexp.arith_expr
               | Compose of language * language
               | If      of string   * Bexp.bool_expr  * language * language
               | While   of string   * Bexp.bool_expr  * language
@@ -13,9 +13,9 @@ let rec run state language =
     match language with
     | Skip    (label) ->
         Js.log {j|SKIP $label|j}
-    | Assign  (label, expr) ->
+    | Assign  (label, variable, expr) ->
         Js.log {j|ASSIGN $label|j};
-        Hashtbl.replace state label ( Aexp.eval state expr )
+        Hashtbl.replace state variable ( Aexp.eval state expr )
     | Compose (c1, c2) ->
         run state c1;
         run state c2;
