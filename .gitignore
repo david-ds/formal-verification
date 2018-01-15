@@ -86,3 +86,4 @@ lib/bs
 *.mliast
 .vscode
 .merlin
+*.bs.js
