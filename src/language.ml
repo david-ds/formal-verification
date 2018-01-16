@@ -24,21 +24,19 @@ let rec run_and_collect_labels state language =
     | Compose (c1, c2) ->
         SS.union (run_and_collect_labels state c1) (run_and_collect_labels state c2)
     | If (label, cond, c1, c2) ->
-        (
+        let labels =
             match ( Bexp.eval state cond) with
             | true  -> run_and_collect_labels state c1
             | false -> run_and_collect_labels state c2
-        )
+        in SS.add label labels
     | While (label, cond, c) ->
-        (
-            let new_labels cond c =
-                match ( Bexp.eval state cond) with
-                | true ->
-                    SS.union (run_and_collect_labels state c) (run_and_collect_labels state (While(label, cond, c)))
-                | false ->
-                    SS.empty
-            in SS.add label (new_labels cond c)
-        )
+        let new_labels cond c =
+            match ( Bexp.eval state cond) with
+            | true ->
+                SS.union (run_and_collect_labels state c) (run_and_collect_labels state (While(label, cond, c)))
+            | false ->
+                SS.empty
+        in SS.add label (new_labels cond c)
 
 let run state language =
     run_and_collect_labels state language;
@@ -51,7 +49,16 @@ let rec collect_labels language =
     match language with
     | Skip    (label)            -> SS.singleton label
     | Assign  (label, _, _)      -> SS.singleton label
-    | Compose (c1, c2)           -> SS.union (collect_labels c1) (collect_labels c2)
-    | If      (label, _, c1, c2) -> SS.add label (SS.union (collect_labels c1) (collect_labels c2))
-    | While   (label, _, c)      -> SS.add label (collect_labels c)
+    | Compose (c1, c2)           ->
+        let s1 = collect_labels c1
+        and s2 = collect_labels c2
+        in  SS.union s1 s2
+    | If      (label, _, c1, c2) ->
+        let s1 = collect_labels c1
+        and s2 = collect_labels c2
+        in let s = SS.union s1 s2
+        in SS.add label s
+    | While   (label, _, c)      ->
+        let s = collect_labels c
+        in SS.add label s
     ;;
