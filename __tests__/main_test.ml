@@ -21,3 +21,15 @@ describe "Program is correct" (fun () ->
 
     test "prog(2) = 0"  (fun () -> expect_result  2   0);
 );
+
+
+describe "Collection of labels are correct" (fun () ->
+    let open Expect in
+
+        test "labels for prog are 1,2,3,4,5,6" (fun () ->
+            let labels = Language.collect_labels Main.prog
+            and expected_labels = Language.SS.of_list ["1"; "2"; "3"; "4"; "5"; "6"]
+            in
+            expect (Language.SS.equal labels expected_labels) |> toBe true
+        );
+);
