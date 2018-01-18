@@ -4,9 +4,8 @@
  * All the affectations are hit
  *)
 
-module LabelSet = Set.Make(String)
-
 open Language;;
+open Utils;;
 
 (*
  * Find all labels corresponding to an ASSIGN node
@@ -58,18 +57,8 @@ let rec find_hit_labels state program =
         );;
 
 (*
- * Build the union of the collected labels
- *)
-let rec make_union_labels states program =
-    match states with
-    | [] -> LabelSet.empty
-    | state::q ->
-        let collected_labels = find_hit_labels state program
-        in LabelSet.union collected_labels (make_union_labels q program)
-
-(*
  * Check if a list of states match all the ASSIGN statements *)
 let satisfies_ta states program =
     let expected_labels = find_expected_labels program
-    and hit_labels = make_union_labels states program
+    and hit_labels = make_union_labels find_hit_labels states program
     in LabelSet.equal expected_labels hit_labels
