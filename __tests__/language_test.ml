@@ -13,7 +13,7 @@ describe "Operations are correct" (fun () ->
         let language = Language.Assign("ASSIGN", "a", Aexp.Const(2))
         and state    = Hashtbl.create 1
         in
-        Language.run state language;
+        Language.execute state language;
         expect_state_value state "a" 2
     );
 
@@ -22,7 +22,7 @@ describe "Operations are correct" (fun () ->
         and state = Hashtbl.create 1
         in
         Hashtbl.replace state "a" 3;
-        Language.run state language;
+        Language.execute state language;
         expect_state_value state "a" 4
     );
 
@@ -35,7 +35,7 @@ describe "Operations are correct" (fun () ->
         )
         and state = Hashtbl.create 1
         in
-        Language.run state language;
+        Language.execute state language;
         expect_state_value state "a" 3
     );
 
@@ -48,7 +48,7 @@ describe "Operations are correct" (fun () ->
         and state = Hashtbl.create 1
         in
         Hashtbl.replace state "a" 1;
-        Language.run state language;
+        Language.execute state language;
         expect_state_value state "a" 5
     );
 

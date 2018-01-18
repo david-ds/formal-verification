@@ -2,14 +2,14 @@ open Jest;;
 
 let _ =
 
-describe "Program is correct" (fun () ->
+describe "prog is correct" (fun () ->
   let open Expect in
 
     let expect_result x value =
         let state = Hashtbl.create 1
         in
         Hashtbl.replace state "X" x;
-        Language.run state Main.prog;
+        Language.execute state Main.prog;
         expect (Hashtbl.find state "X") |> toBe value
     in
 
@@ -22,14 +22,21 @@ describe "Program is correct" (fun () ->
     test "prog(2) = 0"  (fun () -> expect_result  2   0);
 );
 
+describe "prog_modulo is correct" (fun () ->
+  let open Expect in
 
-describe "Collection of labels are correct" (fun () ->
-    let open Expect in
+    let expect_result x y expected_modulo =
+        let state = Hashtbl.create 2
+        in
+        Hashtbl.replace state "X" x;
+        Hashtbl.replace state "Y" y;
+        Language.execute state Main.prog_modulo;
+        expect (Hashtbl.find state "X") |> toBe expected_modulo
+    in
 
-        test "labels for prog are 1,2,3,4,5,6" (fun () ->
-            let labels = Language.collect_labels (Language.label_filter_none) (Main.prog)
-            and expected_labels = Language.SS.of_list ["1"; "2"; "3"; "4"; "5"; "6"]
-            in
-            expect (Language.SS.equal labels expected_labels) |> toBe true
-        );
+    test "prog_modulo(100, 10) = 0"  (fun () -> expect_result  100 10 0);
+
+    test "prog_modulo(10, 3) = 1"    (fun () -> expect_result   10  3 1);
+
+    test "prog_modulo(-20, 7) = 6"          (fun () -> expect_result (-20) 7 6);
 );

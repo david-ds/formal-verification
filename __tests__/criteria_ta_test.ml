@@ -15,11 +15,11 @@ describe "Build union of labels" (fun () ->
 			let states = [
 					( init_state "X"  1 );   (* 1 -> *3* -> 4 -> *6* *)
 			]
-			and expected_labels = Language.SS.of_list ["3";"6"]
+			and expected_labels = CriteriaTa.LabelSet.of_list ["3";"6"]
 			in
 			let labels = CriteriaTa.make_union_labels states (Main.prog)
 			in
-			expect (Language.SS.equal labels expected_labels) |> toBe true
+			expect (CriteriaTa.LabelSet.equal labels expected_labels) |> toBe true
     );
 
     test "run program twice" (fun () ->
@@ -27,10 +27,10 @@ describe "Build union of labels" (fun () ->
 					( init_state "X"  1 );   (* 1 -> *3* -> 4 -> *6* *)
 					( init_state "X" (-1) )  (* 1 -> *2* -> 4 -> *5* *)
 			]
-			and expected_labels = Language.SS.of_list ["2"; "3"; "5"; "6"]
+			and expected_labels = CriteriaTa.LabelSet.of_list ["2"; "3"; "5"; "6"]
 
 			in let labels = CriteriaTa.make_union_labels states (Main.prog)
-			in expect (Language.SS.equal labels expected_labels) |> toBe true
+			in expect (CriteriaTa.LabelSet.equal labels expected_labels) |> toBe true
     );
 );
 
