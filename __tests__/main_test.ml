@@ -27,7 +27,7 @@ describe "Collection of labels are correct" (fun () ->
     let open Expect in
 
         test "labels for prog are 1,2,3,4,5,6" (fun () ->
-            let labels = Language.collect_labels Main.prog
+            let labels = Language.collect_labels (Language.label_filter_none) (Main.prog)
             and expected_labels = Language.SS.of_list ["1"; "2"; "3"; "4"; "5"; "6"]
             in
             expect (Language.SS.equal labels expected_labels) |> toBe true

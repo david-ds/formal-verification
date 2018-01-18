@@ -1,23 +1,28 @@
 (*
  * Critere TA aka "Toutes les Affectations"
  *
- * Tous les labels apparaissent au moins une fois
- * dans les données de test
+ * All the affectations are achieved
  *)
 
-let init_state var init_value =
-    let state = Hashtbl.create 1 in
-    Hashtbl.replace state var init_value;
-    state
-
-(* run the program for each state and build the union of the labels *)
-let rec build_labels_union states program =
-    match states with
-    | [] -> Language.SS.empty
-    | state::q -> Language.SS.union ( Language.run_and_collect_labels state program ) ( build_labels_union q program )
+(*
+ * Label Filter : filter only Assign labels
+ *)
+let label_filter program =
+    match program with
+    | Language.Assign (l, _, _) -> Language.SS.singleton l
+    | _                -> Language.SS.empty
+    ;;
 
 
-let is_ta_criteria states program =
-    let union_labels = build_labels_union states program
-    and all_labels = Language.collect_labels program
-    in Language.SS.equal all_labels union_labels
+(*
+ * Browse a program multiple times with different states
+ * and return the collected labels
+ *)
+let make_union_labels = Criteria.make_union_labels label_filter
+
+let satisfies_ta states program =
+    (* all ASSIGN labels *)
+    let expected_labels = Language.collect_labels label_filter program
+    (* union of all hit ASSIGN labels *)
+    and labels = make_union_labels states program
+    in Language.SS.equal expected_labels labels
